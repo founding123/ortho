@@ -195,7 +195,7 @@
   function currentPageNumber() {
     var prefix = window.FILE_PREFIX || 'ortho';
     var fname = (location.pathname.split('/').pop() || '');
-    var m = fname.match(new RegExp('^' + prefix + '0*(\\d+)\\.html?$', 'i'));
+    var m = fname.match(new RegExp('^' + prefix + '0*(\\d+)(?:\\.html?)?$', 'i'));
     return m ? parseInt(m[1], 10) : NaN;
   }
 

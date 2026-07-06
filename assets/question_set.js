@@ -68,7 +68,7 @@ function toggleOracle(btn){
 
   // 현재 페이지 번호 = 파일명 orthoNNNN.html 에서 추출
   var fname = (location.pathname.split('/').pop() || '');
-  var mnum = fname.match(new RegExp('^' + FILE_PREFIX + '0*(\\d+)\\.html?$', 'i'));
+  var mnum = fname.match(new RegExp('^' + FILE_PREFIX + '0*(\\d+)(?:\\.html?)?$', 'i'));
   var current = mnum ? parseInt(mnum[1], 10) : NaN;
 
   var nums = (window.PAGE_NUMBERS || []).slice().sort(function (a, b) { return a - b; });

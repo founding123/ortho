@@ -148,7 +148,7 @@
   [data-theme="미리내"] .sheet-head .label{color:var(--gold-soft)}
   .sheet-head .hint{font-size:13.5px; color:var(--muted)}
 
-  /* ---------- 정렬 토글 (번호순 ↔ 교수별) ---------- */
+  /* ---------- 정렬 토글 (강의순 ↔ 교수별) ---------- */
   .sort-toggle{
     margin-left:auto; align-self:center;
     display:inline-flex; align-items:center; gap:3px;
@@ -367,7 +367,7 @@
       <span class="label">Index</span>
       <span class="hint">주제를 골라 바로 풀어보세요.</span>
       <div class="sort-toggle" id="sortToggle" role="group" aria-label="목록 정렬 방식">
-        <button type="button" data-sort="num"  aria-pressed="true">번호순</button>
+        <button type="button" data-sort="num"  aria-pressed="true">강의순</button>
         <button type="button" data-sort="prof" aria-pressed="false">교수별</button>
       </div>
     </div>
@@ -426,7 +426,7 @@
 
       /* ── 교수별 묶기 설정 — 여기 세 줄만 고치면 된다 ──────────
          GROUP_ORDER : 'name'  교수 이름 가나다순
-                       'first' 그 교수의 첫 강의 번호순 (강의 진행 순서를 따라감)
+                       'first' 그 교수의 첫 강의 강의순 (강의 진행 순서를 따라감)
          UNKNOWN     : subtitle에서 '22: 이름'을 못 찾은 페이지가 모이는 묶음 이름
          SCAN_LIMIT  : 교수 정보를 훑을 때 한 번에 처리할 페이지 수 */
       var GROUP_ORDER = 'name';
@@ -663,7 +663,7 @@
       var scanning  = false;
 
       function setPages(list){
-        // ord = 번호순으로 매긴 일련번호. 교수별로 묶어도 카드의 번호는 그대로 유지된다.
+        // ord = 강의순으로 매긴 일련번호. 교수별로 묶어도 카드의 번호는 그대로 유지된다.
         pagesData = list.map(function (p, i) { p.ord = i + 1; return p; });
         if (countEl) countEl.textContent = pagesData.length + ' SETS';
         if (fc) fc.textContent = pagesData.length;
@@ -688,10 +688,10 @@
       function groupedHTML(){
         var groups = Object.create(null);
         var order = [];
-        pagesData.forEach(function (p) {                    // pagesData는 번호순이므로
+        pagesData.forEach(function (p) {                    // pagesData는 강의순이므로
           var who = (profMap && profMap[String(p.n)]) || UNKNOWN;
           if (!groups[who]) { groups[who] = []; order.push(who); }
-          groups[who].push(p);                              // 묶음 안도 자동으로 번호순
+          groups[who].push(p);                              // 묶음 안도 자동으로 강의순
         });
         order.sort(function (a, b) {
           if (a === UNKNOWN) return 1;                      // 못 읽은 건 항상 맨 뒤
@@ -748,7 +748,7 @@
             var el = document.getElementById('scanProg');
             if (el) el.textContent = done + ' / ' + total;
           });
-        } catch (e) { /* 실패하면 아래에서 번호순 모양으로 그려진다 */ }
+        } catch (e) { /* 실패하면 아래에서 강의순 모양으로 그려진다 */ }
         scanning = false;
         renderGrid();
       }

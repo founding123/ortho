@@ -140,14 +140,74 @@
   /* ---------- INDEX GRID ---------- */
   .sheet{max-width:var(--maxw); margin:0 auto; padding:54px 22px 30px}
   .sheet-head{
-    display:flex; align-items:baseline; gap:14px; margin:0 0 26px; padding-bottom:16px;
+    display:flex; align-items:baseline; flex-wrap:wrap; gap:14px; margin:0 0 26px; padding-bottom:16px;
     border-bottom:1px solid var(--line);
   }
   .sheet-head .label{font-size:13px; font-weight:700; letter-spacing:.22em; color:var(--gold-deep); text-transform:uppercase}
+  [data-theme="쪽빛"] .sheet-head .label,
+  [data-theme="미리내"] .sheet-head .label{color:var(--gold-soft)}
   .sheet-head .hint{font-size:13.5px; color:var(--muted)}
+
+  /* ---------- 정렬 토글 (번호순 ↔ 교수별) ---------- */
+  .sort-toggle{
+    margin-left:auto; align-self:center;
+    display:inline-flex; align-items:center; gap:3px;
+    background:var(--switch-bg);
+    border:1px solid color-mix(in srgb, var(--gold) 35%, transparent);
+    border-radius:999px; padding:3px; backdrop-filter:blur(10px);
+  }
+  .sort-toggle button{
+    border:0; background:transparent; color:var(--switch-text); cursor:pointer;
+    font:700 12.5px/1 Pretendard,'Apple SD Gothic Neo','Noto Sans KR','Malgun Gothic',system-ui,sans-serif;
+    padding:7px 12px; border-radius:999px;
+    transition:background .16s ease, color .16s ease, box-shadow .16s ease;
+  }
+  .sort-toggle button:hover{color:var(--hero-ink)}
+  .sort-toggle button[aria-pressed="true"]{
+    color:var(--gold-deep); background:color-mix(in srgb, var(--gold) 22%, transparent);
+    box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--gold) 68%, transparent);
+  }
+  [data-theme="쪽빛"] .sort-toggle button[aria-pressed="true"],
+  [data-theme="미리내"] .sort-toggle button[aria-pressed="true"]{color:var(--gold-soft)}
+  .sort-toggle button:focus-visible{outline:2px solid var(--gold-soft); outline-offset:2px}
+  .sort-toggle button:disabled{opacity:.5; cursor:default}
 
   .grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px}
   @media (max-width:680px){ .grid{grid-template-columns:1fr} }
+
+  /* ---------- 교수별 묶음 머리글 (grid 한 줄 전체 차지) ----------
+     [교수 이름] [한 줄 평 · pages.js의 PROF_NOTE_ENC]        [강의 수]
+     ──────────────────────────────────────────────────────────  */
+  .group-head{
+    grid-column:1 / -1;
+    display:flex; align-items:baseline; gap:12px;
+    margin:22px 2px 6px; padding-bottom:9px;
+    background:linear-gradient(90deg, color-mix(in srgb, var(--gold) 50%, transparent), transparent) left bottom / 100% 1px no-repeat;
+  }
+  .group-head:first-child{margin-top:0}
+  .group-head .who{
+    flex:0 0 auto;
+    font-family:'Nanum Myeongjo',serif; font-weight:800; font-size:18px;
+    letter-spacing:-.01em; color:var(--gold-deep);
+  }
+  [data-theme="쪽빛"] .group-head .who,
+  [data-theme="미리내"] .group-head .who{color:var(--gold-soft)}
+  .group-head .note{
+    flex:0 1 auto; min-width:0;
+    font-size:13.5px; line-height:1.5; color:var(--muted); letter-spacing:-.01em;
+  }
+  .group-head .cnt{
+    flex:0 0 auto; margin-left:auto;
+    font-size:11.5px; font-weight:700; color:var(--muted);
+    border:1px solid var(--line); border-radius:999px; padding:3px 9px;
+  }
+  /* 좁은 화면: 한 줄 평을 이름 아래로 내린다 */
+  @media (max-width:560px){
+    .group-head{flex-wrap:wrap; gap:3px 10px}
+    .group-head .who{order:1}
+    .group-head .cnt{order:2}
+    .group-head .note{order:3; flex:1 1 100%}
+  }
 
   .card{
     position:relative; display:flex; align-items:center; gap:18px;
@@ -306,6 +366,10 @@
     <div class="sheet-head">
       <span class="label">Index</span>
       <span class="hint">주제를 골라 바로 풀어보세요.</span>
+      <div class="sort-toggle" id="sortToggle" role="group" aria-label="목록 정렬 방식">
+        <button type="button" data-sort="num"  aria-pressed="true">번호순</button>
+        <button type="button" data-sort="prof" aria-pressed="false">교수별</button>
+      </div>
     </div>
     <div class="grid" id="grid"></div>
   </main>
@@ -331,8 +395,8 @@
   "iterations": 600000,
   "cipher": "AES-GCM",
   "salt": "5M0C/GJq63f9MDopdTfI6A==",
-  "iv": "Kh/0tDE8WvQmkJ74",
-  "data": "zHi9mYHRt9TXceqjZu91Ht4TohR8ORDJTTv9W7QwAdKpI90k4sE="
+  "iv": "ohyclL4HmG8iMMyB",
+  "data": "aStorgX4IsWGQX26/rQ4LRVax+F9S8XA/y7bPO4CuMA52Ho17HM="
 }
   </script>
 
@@ -351,6 +415,7 @@
       var grid = document.getElementById('grid');
       var countEl = document.getElementById('count');
       var fc = document.getElementById('foot-count');
+      var sortToggle = document.getElementById('sortToggle');
       if (!grid) return;
 
       var PAGE_NUMBERS = (window.PAGE_NUMBERS || []).slice().sort(function (a, b) { return a - b; });
@@ -358,6 +423,15 @@
 
       // 파일명 접두어 — pages.js의 window.FILE_PREFIX 한 곳에서 관리한다.
       var FILE_PREFIX = window.FILE_PREFIX || 'ortho';
+
+      /* ── 교수별 묶기 설정 — 여기 세 줄만 고치면 된다 ──────────
+         GROUP_ORDER : 'name'  교수 이름 가나다순
+                       'first' 그 교수의 첫 강의 번호순 (강의 진행 순서를 따라감)
+         UNKNOWN     : subtitle에서 '22: 이름'을 못 찾은 페이지가 모이는 묶음 이름
+         SCAN_LIMIT  : 교수 정보를 훑을 때 한 번에 처리할 페이지 수 */
+      var GROUP_ORDER = 'name';
+      var UNKNOWN     = '교수 미상';
+      var SCAN_LIMIT  = 6;
 
       async function resolveEncryptedPageName(doc) {
         if (!window.SOK_LOCK || !window.SOK_LOCK.decryptStoredPayload) return '';
@@ -398,12 +472,15 @@
          · 같은 세션(비밀번호 재입력 없이 오갈 수 있는 동안)에서만 유효
          · PAGE_NUMBERS가 바뀌면 sig 불일치로 자동 폐기
          · 탭/브라우저를 닫으면 비밀번호와 함께 사라짐(sessionStorage) */
-      var TOC_CACHE_KEY = 'sok-index-toc-v1';
-      var UNLOCKED_FLAG = 'sok-site-unlocked-v1';
-      // 캐시 서명: 페이지 목록이나 TOC_ENC 암호문이 바뀌면 캐시를 자동 폐기한다.
+      var TOC_CACHE_KEY  = 'sok-index-toc-v1';
+      var PROF_CACHE_KEY = 'sok-index-prof-v1';   // 번호→교수 (세션 캐시)
+      var SORT_KEY       = 'sok-index-sort-v1';   // 마지막으로 고른 정렬 (localStorage)
+      var UNLOCKED_FLAG  = 'sok-site-unlocked-v1';
+      // 캐시 서명: 페이지 목록이나 TOC_ENC·PROF_ENC 암호문이 바뀌면 캐시를 자동 폐기한다.
       function tocSig(){
-        var enc = (window.TOC_ENC && window.TOC_ENC.data) ? String(window.TOC_ENC.data).slice(0, 24) : '';
-        return 'v2|' + enc + '|' + PAGE_NUMBERS.join(',');
+        var enc  = (window.TOC_ENC  && window.TOC_ENC.data)  ? String(window.TOC_ENC.data).slice(0, 24)  : '';
+        var penc = (window.PROF_ENC && window.PROF_ENC.data) ? String(window.PROF_ENC.data).slice(0, 24) : '';
+        return 'v4|' + enc + '|' + penc + '|' + PAGE_NUMBERS.join(',');
       }
       function hasUnlockedSession(){
         try { return sessionStorage.getItem(UNLOCKED_FLAG) === '1'; } catch (e) { return false; }
@@ -420,69 +497,322 @@
         try { sessionStorage.setItem(TOC_CACHE_KEY, JSON.stringify({ sig: tocSig(), pages: pages })); }
         catch (e) {}
       }
+      function readProfCache(){
+        if (!hasUnlockedSession()) return null;
+        try {
+          var obj = JSON.parse(sessionStorage.getItem(PROF_CACHE_KEY) || 'null');
+          if (obj && obj.sig === tocSig() && obj.map && typeof obj.map === 'object') return obj.map;
+        } catch (e) {}
+        return null;
+      }
+      function writeProfCache(map){
+        try { sessionStorage.setItem(PROF_CACHE_KEY, JSON.stringify({ sig: tocSig(), map: map })); }
+        catch (e) {}
+      }
+      function readSort(){
+        try { return localStorage.getItem(SORT_KEY) === 'prof' ? 'prof' : 'num'; } catch (e) { return 'num'; }
+      }
+      function writeSort(mode){
+        try { localStorage.setItem(SORT_KEY, mode); } catch (e) {}
+      }
 
-      function renderGrid(pages){
-        if (countEl) countEl.textContent = pages.length + ' SETS';
-        if (fc) fc.textContent = pages.length;
-        if (!pages.length) {
+      /* ── 교수 이름 읽기 ────────────────────────────────────
+         교수 이름은 각 페이지 pageMetaPayload의 subtitle 안에 있다.
+           "20, 21: X; 22: 홍길동; ..."  →  '22:' 다음부터 ';' 앞까지
+         · 22 바로 앞이 숫자면 무시한다 → '2022: ...' 같은 건 안 걸린다
+         · 세미콜론이 없으면 문자열 끝까지를 이름으로 본다
+
+         이름 뒤에 부가 정보를 적고 싶으면 아래 PROF_CUT 구분자를 하나 둔다.
+         구분자부터 뒤는 묶기에서 통째로 무시되므로 뭘 적어도 안전하다.
+         (부가 정보는 문항 페이지 subtitle에 그대로 보인다.)
+
+           "22: 홍길동;"                → 홍길동
+           "22: 홍길동 (신규 강의);"     → 홍길동
+           "22: 홍길동(정형외과);"       → 홍길동
+           "22: 홍길동 · 3문항;"         → 홍길동
+           "22: 홍길동, 부교수;"         → 홍길동
+           "22: 홍길동 / 대체 강의;"     → 홍길동
+           "22: 김 철수 (2시간);"        → 김 철수   ← 이름 안의 띄어쓰기는 살아남는다
+
+         구분자를 늘리려면 PROF_CUT의 [ ] 안에 문자를 더 넣는다.
+         '-'와 '.'은 일부러 뺐다 — 'Kim Sung-ho', 'Prof. Kim' 같은 이름이 잘린다. */
+      var RE_PROF  = /(?:^|[^0-9])22\s*:\s*([^;]+)/;
+      var PROF_CUT = /[(（\[［{·・,，、\/|]/;
+
+      function cutName(s){
+        return String(s == null ? '' : s).split(PROF_CUT)[0].trim().replace(/[\s.·]+$/, '');
+      }
+      function profOf(subtitle){
+        var m = RE_PROF.exec(String(subtitle == null ? '' : subtitle));
+        return m ? cutName(m[1]) : '';
+      }
+
+      // 아직 암호화하지 않은(평문 JSON) 페이로드도 그대로 읽을 수 있게 한다.
+      async function decryptJSON(raw){
+        if (raw && typeof raw === 'object' && typeof raw.data !== 'string') return raw;
+        return JSON.parse(await window.SOK_LOCK.decryptStoredPayload(raw));
+      }
+
+      async function profOfPage(num){
+        try {
+          var res = await fetch(FILE_PREFIX + pad(num) + '.html');
+          if (!res.ok) return '';
+          var doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+          var el = doc.getElementById('pageMetaPayload');
+          if (!el) return '';
+          var raw = window.SOK_LOCK.parsePayloadText
+            ? window.SOK_LOCK.parsePayloadText(el.textContent)
+            : JSON.parse(el.textContent);
+          var meta = await decryptJSON(raw);
+          return profOf(meta && meta.subtitle);
+        } catch (e) {
+          return '';
+        }
+      }
+
+      /* 번호→교수 지도를 만든다.
+         ① pages.js에 PROF_ENC(TOC_ENC와 같은 방식으로 암호화한 번호→교수)가 있으면
+            1회 복호화로 끝난다. 파일을 하나도 안 받는다. (권장)
+         ② PROF_ENC에 없는 번호만 그 페이지를 내려받아 subtitle에서 뽑는다.
+            PROF_ENC 자체가 없으면 전부 이 길로 간다. (관리 없이 바로 동작)
+         결과는 세션 캐시에 넣어 두 번 다시 읽지 않는다. */
+      async function loadProfMap(onProgress){
+        var cached = readProfCache();
+        if (cached) return cached;
+
+        var map = Object.create(null);
+
+        if (window.PROF_ENC && window.SOK_LOCK) {
+          try {
+            var m = await decryptJSON(window.PROF_ENC);
+            if (m && typeof m === 'object') {
+              PAGE_NUMBERS.forEach(function (n) {
+                var v = cutName(m[String(n)]);      // PROF_ENC에도 같은 이름 규칙을 적용
+                if (v) map[String(n)] = v;
+              });
+            }
+          } catch (e) { /* 실패하면 아래 스캔으로 폴백 */ }
+        }
+
+        var queue = PAGE_NUMBERS.filter(function (n) { return !map[String(n)]; });
+        var total = queue.length;
+        var done = 0;
+
+        async function worker(){
+          while (queue.length){
+            var n = queue.shift();
+            var who = await profOfPage(n);
+            if (who) map[String(n)] = who;
+            done++;
+            if (onProgress) onProgress(done, total);
+          }
+        }
+        var workers = [];
+        for (var i = 0; i < Math.min(SCAN_LIMIT, total); i++) workers.push(worker());
+        await Promise.all(workers);
+
+        if (Object.keys(map).length) writeProfCache(map);
+        return map;
+      }
+
+      /* ── 교수 한 줄 평 ─────────────────────────────────────
+         pages.js의 PROF_NOTE_ENC = { "홍길동": "문제 다 알려줬음.", ... }
+         · 키는 ortho 파일에서 뽑아낸 교수 이름과 같아야 한다.
+           '홍길동.'처럼 마침표를 붙여 적어도 같은 규칙으로 맞춰 준다.
+         · TOC_ENC와 같은 방식으로 암호화한다. 없으면 이름만 뜬다.
+         · 세션당 1회만 복호화한다(유도 키는 unlock.js가 이미 캐시함). */
+      var _notePromise = null;
+      function loadProfNotes(){
+        if (!window.PROF_NOTE_ENC || !window.SOK_LOCK) return Promise.resolve(null);
+        if (!_notePromise) {
+          _notePromise = decryptJSON(window.PROF_NOTE_ENC).then(function (obj) {
+            var out = Object.create(null);
+            if (obj && typeof obj === 'object') {
+              Object.keys(obj).forEach(function (k) {
+                var who = cutName(k);
+                var txt = String(obj[k] == null ? '' : obj[k]).trim();
+                if (who && txt) out[who] = txt;
+              });
+            }
+            return out;
+          });
+          _notePromise.catch(function () { _notePromise = null; });
+        }
+        return _notePromise;
+      }
+
+      // 교수별 화면에 필요한 것 두 가지(번호→교수, 교수→한 줄 평)를 한꺼번에 준비한다.
+      async function ensureProfData(onProgress){
+        var r = await Promise.all([
+          profMap ? Promise.resolve(profMap) : loadProfMap(onProgress),
+          loadProfNotes().catch(function () { return null; })
+        ]);
+        profMap   = r[0];
+        profNotes = r[1] || Object.create(null);
+      }
+
+      /* ── 화면 상태 ─────────────────────────────────────────
+         pagesData : [{n, file, name, ord}] — 항상 번호 오름차순
+         profMap   : {"100":"홍길동", ...}          번호 → 교수 (ortho 파일에서 추출)
+         profNotes : {"홍길동":"문제 다 알려줬음.", ...}  교수 → 한 줄 평 (pages.js에서 직접 작성)
+         sortMode  : 'num' | 'prof' */
+      var pagesData = [];
+      var profMap   = readProfCache();
+      var profNotes = null;
+      var sortMode  = readSort();
+      var scanning  = false;
+
+      function setPages(list){
+        // ord = 번호순으로 매긴 일련번호. 교수별로 묶어도 카드의 번호는 그대로 유지된다.
+        pagesData = list.map(function (p, i) { p.ord = i + 1; return p; });
+        if (countEl) countEl.textContent = pagesData.length + ' SETS';
+        if (fc) fc.textContent = pagesData.length;
+      }
+
+      function syncToggle(){
+        if (!sortToggle) return;
+        var btns = sortToggle.querySelectorAll('[data-sort]');
+        for (var i = 0; i < btns.length; i++){
+          btns[i].setAttribute('aria-pressed', String(btns[i].getAttribute('data-sort') === sortMode));
+          btns[i].disabled = scanning;
+        }
+      }
+
+      function cardHTML(p){
+        return '<a class="card" href="' + escAttr(p.file) + '">' +
+                 '<span class="num mono">' + pad2(p.ord) + '</span><span class="rule"></span>' +
+                 '<span class="name">' + esc(p.name) + '</span><span class="go">→</span>' +
+               '</a>';
+      }
+
+      function groupedHTML(){
+        var groups = Object.create(null);
+        var order = [];
+        pagesData.forEach(function (p) {                    // pagesData는 번호순이므로
+          var who = (profMap && profMap[String(p.n)]) || UNKNOWN;
+          if (!groups[who]) { groups[who] = []; order.push(who); }
+          groups[who].push(p);                              // 묶음 안도 자동으로 번호순
+        });
+        order.sort(function (a, b) {
+          if (a === UNKNOWN) return 1;                      // 못 읽은 건 항상 맨 뒤
+          if (b === UNKNOWN) return -1;
+          if (GROUP_ORDER === 'first') return groups[a][0].n - groups[b][0].n;
+          return a.localeCompare(b, 'ko');
+        });
+
+        var html = '';
+        order.forEach(function (who) {
+          var note = (who !== UNKNOWN && profNotes) ? (profNotes[who] || '') : '';
+          html += '<div class="group-head">' +
+                    '<span class="who">' + esc(who) + '</span>' +
+                    (note ? '<span class="note">' + esc(note) + '</span>' : '') +
+                    '<span class="cnt mono">' + groups[who].length + '</span>' +
+                  '</div>' +
+                  groups[who].map(cardHTML).join('');
+        });
+        return html;
+      }
+
+      function renderGrid(){
+        syncToggle();
+        if (!pagesData.length) {
           grid.innerHTML = '<div class="empty"><code>orthoNNNN.html</code>(예: <code>ortho0100.html</code>) 이름으로 파일을 올리고, <code>pages.js</code>의 <code>PAGE_NUMBERS</code>와 <code>TOC_ENC</code>(번호→제목)에 항목을 추가하면 여기에 나타납니다.</div>';
           return;
         }
-        var html = '';
-        pages.forEach(function (p, idx) {
-          html += '<a class="card" href="' + escAttr(p.file) + '">' +
-                    '<span class="num mono">' + pad2(idx + 1) + '</span><span class="rule"></span>' +
-                    '<span class="name">' + esc(p.name) + '</span><span class="go">→</span>' +
-                  '</a>';
+        grid.innerHTML = (sortMode === 'prof' && profMap) ? groupedHTML() : pagesData.map(cardHTML).join('');
+      }
+
+      /* 정렬 바꾸기. '교수별'을 처음 누르면 그때 교수 정보를 읽는다(지연 로딩).
+         한 번 읽으면 세션 캐시에 남아 이후로는 즉시 전환된다. */
+      async function setSort(mode){
+        sortMode = (mode === 'prof') ? 'prof' : 'num';
+        writeSort(sortMode);
+
+        if (sortMode !== 'prof') { renderGrid(); return; }
+
+        // 교수 정보(이름·한 줄 평)는 암호화돼 있으므로 해제된 뒤에만 읽을 수 있다.
+        // (unlock.js가 아직 로드되기 전이면 일단 그려 두고, 해제 이벤트에서 다시 그린다.)
+        if (!window.SOK_LOCK || !window.SOK_LOCK.isUnlocked || !window.SOK_LOCK.isUnlocked()) {
+          renderGrid();
+          return;
+        }
+
+        var needScan = !profMap;   // 파일을 훑어야 하는가 (PROF_ENC가 있거나 캐시가 있으면 안 훑는다)
+        if (needScan) {
+          scanning = true;
+          syncToggle();
+          grid.innerHTML = '<div class="empty">강의를 교수별로 모으는 중… <span class="mono" id="scanProg"></span></div>';
+        }
+        try {
+          await ensureProfData(function (done, total) {
+            var el = document.getElementById('scanProg');
+            if (el) el.textContent = done + ' / ' + total;
+          });
+        } catch (e) { /* 실패하면 아래에서 번호순 모양으로 그려진다 */ }
+        scanning = false;
+        renderGrid();
+      }
+
+      if (sortToggle) {
+        sortToggle.addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-sort]');
+          if (!btn || btn.disabled) return;
+          setSort(btn.getAttribute('data-sort'));
         });
-        grid.innerHTML = html;
       }
 
       var renderedFromCache = false;
 
-      async function buildGrid(unlocked) {
+      function draw(){
+        // 저장된 정렬이 '교수별'이면 필요한 교수 정보를 이어서 읽는다.
+        if (sortMode === 'prof') setSort('prof');
+        else renderGrid();
+      }
+
+      async function buildGrid() {
         var seq = ++buildSeq;
         grid.innerHTML = '<div class="empty">신탁 받는 중...</div>';
         // 제목의 단일 출처: pages.js의 TOC_ENC(번호→제목, 암호화)를 1회 복호화해 쓴다.
         // 맵에 없는 번호만 예전 방식(그 페이지를 내려받아 제목 추출)으로 폴백한다.
         var toc = null;
-        if (unlocked && window.SOK_LOCK && window.SOK_LOCK.loadToc) {
+        if (window.SOK_LOCK && window.SOK_LOCK.loadToc) {
           try { toc = await window.SOK_LOCK.loadToc(); } catch (e) { toc = null; }
         }
         var tasks = PAGE_NUMBERS.map(function (n) {
           var t = toc && toc[String(n)];
           if (t) return Promise.resolve({ n: n, file: FILE_PREFIX + pad(n) + '.html', name: String(t).trim() });
-          return readPage(n, !!unlocked);
+          return readPage(n, true);
         });
         var results = await Promise.all(tasks);
         if (seq !== buildSeq) return;
 
-        var pages = results.filter(Boolean).sort(function (a, b) { return a.n - b.n; });
-        renderGrid(pages);
+        setPages(results.filter(Boolean).sort(function (a, b) { return a.n - b.n; }));
         // 복호화된 제목으로 완성된 목차만 캐시에 저장한다.
-        if (unlocked && pages.length) writeTocCache(pages);
+        if (pagesData.length) writeTocCache(pagesData);
+        draw();
       }
 
       // 이미 해제된 세션이고 캐시가 현재 목록과 맞으면, 받아오지 말고 즉시 그린다.
       var cached = readTocCache();
-      if (cached) {
+      if (cached && cached.length) {
         renderedFromCache = true;
-        renderGrid(cached);
+        setPages(cached);
+        draw();
+      } else {
+        syncToggle();
       }
 
       // 캐시로 이미 정확히 그렸다면 해제 이벤트가 와도 다시 빌드하지 않는다.
       window.addEventListener('sok:index-unlocked', function () {
+        if (!profMap) profMap = readProfCache();   // 해제 직후에야 세션 캐시를 읽을 수 있다
         // 캐시로 그렸더라도 그 캐시가 이미 폐기됐다면(저장된 비밀번호 검증 실패 등)
         // 화면에 남은 목차는 낡은 것이므로 다시 빌드한다.
-        if (renderedFromCache && readTocCache()) return;
-        buildGrid(true);
+        if (renderedFromCache && readTocCache()) { draw(); return; }
+        buildGrid();
       });
 
       // 잠금 상태에서는 목차(.locked-content)가 어차피 숨겨져 있으므로
-      // 미리 빌드하지 않는다. (예전에는 잠금 상태에서 buildGrid(false)로
-      // 전 페이지를 한 번 내려받고, 해제 직후 buildGrid(true)로 또 한 번
-      // 내려받아 네트워크·복호화가 2배로 들었다.)
-      // 해제되면 sok:index-unlocked 이벤트가 buildGrid(true)를 호출한다.
+      // 미리 빌드하지 않는다. 해제되면 sok:index-unlocked 이벤트가 buildGrid()를 부른다.
     })();
   </script>
   <script src="assets/unlock.js"></script>

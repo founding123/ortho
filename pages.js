@@ -67,8 +67,8 @@ window.SITE_ENC =
   "iterations": 600000,
   "cipher": "AES-GCM",
   "salt": "5M0C/GJq63f9MDopdTfI6A==",
-  "iv": "t1IWH/52na8Gfs0U",
-  "data": "VptUuwbAug/AAojMLYO5XnD3aBV21rhDbdnybSPMEhhj7mjvTXzQDnMPuwWeyeSaoeUkgJguuw6shBIU8r5gx8tLBZnXSVOiKkKhj78nRDbAELUDi8iRwWDuUhWnvQ3IAysD0B+Ryo0ya8GizUbLdgh6x1sd+7CyOGtdULPkiIFM0cCgm7+vxO0i/qiD24MY1MdwArQos22EuYkrsk9k3YjkU+uMtSux9xH8Hyx24D4ZB3jRDIuwG1oIUqCbA6HShE9MZZE="
+  "iv": "rvkdWt2R7R2hlQsr",
+  "data": "BxNKP1ZMiMcVIqz9+fpVWDM4uSh1cNCR4f3cWkvKIWY4gRsgAwjI2pgtjMhyT49N8dx5s5QxYg9k3KbKIYh1gSURvy1iIDnXc8MK2m8qesZSigR70vvlBVLZmcFMqGOr/f8wMBIDti59eaoU1Z72+iXlmFq3KkciXAEAAytglT2mptWKQGl65Rv0cqAtmOZAI+yLsdYVb8uYaMsBpLOC250ZQyt2zry7CMoegOG8Y1v8cH7F0E6x3TyYIWIo1Qmp/mESMhE="
 }
 ;
 
@@ -79,8 +79,59 @@ window.TOC_ENC =
   "iterations": 600000,
   "cipher": "AES-GCM",
   "salt": "5M0C/GJq63f9MDopdTfI6A==",
-  "iv": "SiJcICrIG4FA6KTD",
-  "data": "RRSUTHJUiXncwVmawFuuU7CO3IYYTyRPymC3gzzb2dmzrbUvCrzEPahfAbqyZOn4Kj6DBkUFLxjfKOGCZfAfyTetdOntwI9nelvfTmNgQJWmQIShzxK+UJ34IVZuacFZMhnzVy+D+w2ybrg5v7JHCN8GtxeALks/F2xF6QE22sj9STCqiK5qgn+klh/JaAGa6DQsXW2iZJzJqK+nhSW3uYaeJRd/vyiWW0AafbICP3Xznf+fHs65jQnGBHYhiY/1NTYNVW8vZ1eW2B9pV4AR6RXifJS+oRFNgFV+xEzld5yBpA1U/CY3ivm6R50Ak5+4eTYvYwonOWnaYY+9P+LR1npjSLKuU+6THUesEp3ngpT6Jl6Y8BHsI7W6IiBuh5V14Ty41CLGa7wft4UA1NDbXMtNR/g72hpgV/Rjsl/zJq+x20alH8Hz3AxOebsGa8NkNH0kyhfexTuP0nb4VwIv31Vt3r0LytKrL7nmF2KU3A9EweeurEvRaisNmW5uTHtSgiQHXuEYE7lGUCQvG2RgOmkyGWNozT2hTQU9PQytPYrWnsqo4zJIHgSTLDFP1tyJiWGmQ7id0nX83mcHXmGM1/YRtWP8j9Rmo6sQb5x7sQn1dorpJC+F6MUJXSS0QX1UN8XgA4N5Im2gLCAoTacSaLJcKvASD9G4+LTw5EFw1T1b2kGgHjY7GjcADUGdrggg198nclVCAe8F820nb5prZtekTucWt0I5340NOHmXej06xRrmP84Yqnq1HRhf+6ZQ3TGX9TmRRlYjFUUxBfy6qd7zryZO/rnGOIVLHLLhJNOVh5kaNen7Ig5y2fP5v1mn7E7Sg4xQpDfczVSd7Y2MgIDuIHOeQpfhd8Kb/4m9oX7PoOyhmsFObcjU9xV15z5RuJjiszWQ1lYXRvaude9+JfpKK2ZqKjaHsSXloggDxtMPOv9jzOTx+zo2h/+QvPAv7mZet+Sc8GAvThd0tia1ZWrO11ZTgYFr+hAwCE5AAybQ0KNpbNJQ84x3qib+GBkh2Q+jFGZjyQ3zmLNfAEkIISVmQQ+ZG4ispaChTb7tJIrTaAZZtNaETyKsrTfaxvEureew68WBAJTX/yRjny/oV/j3+JoP/S84vEKijjFGQ70hcb5+KVme3OvZKpgbjvbLXP3N8/IP0EugNKDoGPlR4Kfinppr6EVywd9dsAA5OVInPVzaKNdEJzg6xVXcEY4WGT8H09COndl5VybqGZMd56yzBoyNWuqWoFf8dRvyO6es9ukVPxJVZBOkAheZq2D9x0wnV/EGJMFoe0AnFYq9wF3oMNW1JYB6SAI8pp+yWBKlL4yjiYE31Myopf65DwzfesiIsn+Cp53JKOHyjcbtry4kjhN67SWHz5x9uzYMlAmEbigme9Xk0+m7DwKTK/L/7hu7Wpksxri9kjtq/OuPF3hDzFe+SQXvw4M7qyG/nZxrVq3UDPN/gPeCxYmD4YesJBCTzVKojqf+xZ3ieTEhiXHxfg4i2t5hQgq6KbYy1fy41fZHhkv2Hrp1NwXJgipl9R+PcypMWgEDdBpM01btZ58oGC+X99xnlgWJRhh7ZZFB3UwEK7zahFcOu/DB1WGwJganup8nwF+2tDsD2JSCXz8yfPob2GLUSD2eR+hXQ4A="
+  "iv": "CiUtLE4nhYDamrOC",
+  "data": "el5uyWRBYJ/bEd3qM2AVWqUdAJvy1cKf3hbORrqndt5+rVWku0KyT7BrFjTBtjnHvr6aSHMtj2Er3Z8Gc/++KajDdoAriuy/07Scw8Od2R8Vv1aTh+G5WSj/rFHXKY80T7gKbH3OIdtLroMx0Y/O9s6VWH6SMf94pOW5mIRRGnqudxQNmOw1NRyiIXdZf6Un5Ltd6JmylVg21A1b10f6fz+aE3R411i9F0ioEQUwIykSTEBiebxgc0mdN3G36A/lwLEPT175q8rcsjYIezkd7Cqg84xiWykJZmVAWc+I0syG/8ipbdUWuCR9wRPamMu63qLjPAtS9sXl4n4cZCkEVXUDEZkbJoSnkgmGHZSyHGCDiCPbpEEfBUb/+5WNg69gCDACBipT+3hSEQJawfFwUB3QodGEG4RWEXA73p81JMN/amMGY/dwJw99x7sQMIfbJ49J0JiF5e14FhGhHmFFfqE/kMYA1Waxa7NRjkyztHth5mluaLqFotird9L6WPOP1RfAH2NBMJK1jVkEHd7HQcBhdHvlpvEhX+LGQexo86LzuFIEWZrYW0dNFws9DuYqnCUw1PoEUDWTxxh/4eEHkRLIn6CSGiDNMIqB9J3b/CUWyu+4Iroum6uyO8eSJW6opGvB0hpLD7woax7J8aNi+qIbrvxBA29JFt2SCy6/3ev17oGVsV5eHuZaDsXjMCzFDFQzDKgVMuHWcVo1DB3355+29vWRqwT8fz02KXdyCt5UFEo/eXBwaMB6Snu2a4hjTULFpJfmN7DTZwfA4+FLRnh3JwIfcx8dvmJUbHtZoDYc228xYPuG9zT50Es3AuvQgvKqOLSdeVYbZ56c/3oIsSdBeKAh1x8vChcEDQNXh7mQSPyAfV6uxfX5eNTMsb+uT2U0tyUjvfWkxETk+UkstnKeJu89kKjxm43Ftnq1hroqDrII5D06VRNwll29cMn3+KPDArrXObnABCyNTMFmHa42IUYpp4L9KjEsdxYaWzaX4v62PnxEA3ALXOC836Ma0vQKFvco5sJNl4F5DmbXmkCEF8DqgJFhhqFnEBhJzLeqDt7X44F3N9rSG57tio4KUhRCKJ+vRH83amXPu6IudMf4LOJhBvvf7ARqur8xaO/2Qmc4sMSmEsxbeoH2BLKlGxIF5C5H9ibYm34RNPYLnfa6V+kVP7TB406pDec8NltLSeIfgVbnkF5T18DWzsTd8F7PvXlLmE95CUIq80t89rUMFj9EAcm9hs//Xspt1/D7uGJHDDYvfQaY/NyoQyk9uxi9k5MW/c9lyyzbSDHmyt7Op+OcmWoHKJOxQ0aHwlfBBHHTDTkNsBrRnNzOMQft6AUBQ38VS+AvhwEqG3PWqlx0WHTLb/l6xsmIlrosktZouMbxuk68z7npA/O5mIDvwx1E9j225ldH5zsthPUAFQX0gw/JXMHSeiQdEoY5Yor+pdbdeo2/N6gsI5v8ZfNyGQygqA1SYknPCwTBOZ3o86W8t/pmT/+KzehmCGx6CjVJrGnsCk+XBPXksrI1OoAn8rVCkvcW1VVgc45klJwP3n7o24SkfGoQouxzbrdR4f6/bMJT0OqgU3y1JVvtlWcHKAdWcRU2o+bOs8fsSUr2h3ofK5FV7UI7tzMFtMj2YyE="
+}
+;
+
+/* ============================================================
+   ▣ 목차의 '교수별' 묶기
+
+     index 목차 오른쪽 위 [번호순 | 교수별] 토글이 쓰는 정보다.
+     교수 이름은 각 페이지 pageMetaPayload의 subtitle에서 읽는다.
+
+       "subtitle":"20, 21: X; 22: 홍길동."
+                              ^^^^^^^^  '22:' 다음부터 ';'(또는 끝) 앞까지
+                                        끝의 마침표·공백은 알아서 떼어낸다.
+
+     ▸ 이름 뒤에 뭔가 더 붙여야 한다면 구분자를 하나 두면 된다.
+       구분자부터 뒤는 이름에서 잘려 나간다.
+         쓸 수 있는 구분자 :  (   [   ·   ,   /   |   그리고 전각 형태
+         "22: 홍길동 (신규 강의);"  → 홍길동
+       ('-'와 '.'은 구분자가 아니다. 'Kim Sung-ho', 'Prof. Kim'이 잘리므로.)
+
+     그래서 아무것도 안 해도 '교수별' 버튼은 그냥 동작한다.
+     다만 이 방식은 교수 이름을 알아내려고 orthoNNNN.html을 전부 한 번씩
+     내려받아 복호화한다(세션당 1회, 결과는 세션 캐시에 저장).
+
+   ▣ 교수 한 줄 평 (PROF_NOTE_ENC) — 아래에서 직접 적는다
+
+     목차를 교수별로 묶으면 머리글에 이름과 함께 이 한 줄이 뜬다.
+
+       홍길동   문제 다 알려줬음.                              3
+       ────────────────────────────────────────────────────────
+       [ 01 ] 하지 해부학              [ 03 ] 척추의 해부학
+       ...
+
+     한 줄 평은 '강의'가 아니라 '교수'에 붙는다. 홍길동 강의가 5개여도
+     여기 한 번만 적으면 된다. ortho 파일들은 손대지 않아도 된다.
+
+     · 키 = ortho 파일에서 뽑아낸 교수 이름. '홍길동.'처럼 마침표를 붙여
+       적어도 같은 규칙으로 맞춰 주므로 그대로 복사해 붙여도 된다.
+     · 안 적은 교수는 이름만 뜬다. 통째로 지워도 동작한다.
+     · 내용이 내용이니만큼 SITE_ENC·TOC_ENC와 같은 방식으로 암호화한다.
+          python tools/encrypt_fragment.py prof_note.json --password <비밀번호>
+   ============================================================ */
+
+window.PROF_NOTE_ENC =
+{
+  "kdf": "PBKDF2",
+  "hash": "SHA-256",
+  "iterations": 600000,
+  "cipher": "AES-GCM",
+  "salt": "5M0C/GJq63f9MDopdTfI6A==",
+  "iv": "Yo7zVjfdLU3NJocm",
+  "data": "Ies5RmjBUCMe6shwR5/jLJZ37mRNIL8n4qhUGSllc2m9EqzrNx0HsPZdU/KrggUhfK9wKXuZ8GvO3VxheNlTO380Afw3G4bYMbJ8XTDbjDL4vj22nAXveg6mZv7TAATq+rw50JsnauMlc/nVaSpYKrqlOTJ/+HMKNuvAGX1wgE5QlGY5kvucyq2RpAznedStYUHo7+nwCm/4wbE9w+3zxaMdWyw3xnsC4Jn4J3vKa2LICg5gHA1RdO+d6DSst4L+NTZeYxvakQ0pTzxc9yWvIcd2ChD+M9erCuBwlyVnoQolp+EnVJF4fvTz1LWbYZxSdIIrHA8f+BznbzsSfTG7iL3NlRuWNgKMkhEjHnvcIm3+cZRwzKdJLRYCx0xP7KiBuijwOfs+55SvTuvuGu8aMSZz4KHRyrA0m/4eJvyFNrF0V6ZXqGW3g1tXJlfJW+eSdTKSmBEvwNJ610ew2a1CpAJUUtuWffRZ2zTJrJ6fzuPUIsvj1qa7AQErl3UYsGPP+zHK4hgR08UeefBwGRabETZ5CUM2fYt4BU8cBwMMgEPHjH4GFDooKxZai20XvJPg+lRVJp1Q2g3I7ojm7Zs2qTvdTjsViLp1pOWiiE6b2ZemHkjedD/bUXQEg3rMNUnXcnrMv0SMbud7nKehh8rt2aMHuJrYcalYOdLr21Ct0VrO7UzIbOdORoDRSlLma9qopWKVGltPoJWp2V+gEX0frGrzEIdM9XwYAqckY0IvtXseCy6odXYIP7wF/nopNVreUCigOpHI7VSvymt3QNw3jDWNwkvB9Ctq8dnp2jo/ugYHDxI8k4b5+dGJxMbEEtFDGstAhuBQSJeOBy26RqUQpqa+thgz+up9Ah/vMBq2t/WItewIGsqKefAYgfIfnqFOyGZ1NRGPThw0VzWnwiuddrvsfYK+5w=="
 }
 ;
 

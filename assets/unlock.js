@@ -155,6 +155,7 @@
       sessionStorage.removeItem(PASS_KEY);
       sessionStorage.removeItem(UNLOCKED_KEY);
       sessionStorage.removeItem('sok-index-toc-v1'); // 목차 캐시도 함께 폐기
+      sessionStorage.removeItem('sok-index-prof-v1'); // 교수 캐시(번호→교수)도 함께 폐기
       sessionStorage.removeItem('sok-pager-titles-v1'); // 이전·다음 제목 캐시도 폐기
       sessionStorage.removeItem('sok-derived-keybits-v1'); // 유도 키 캐시도 폐기
     } catch (e) {}
